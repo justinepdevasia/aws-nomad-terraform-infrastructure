@@ -429,12 +429,12 @@ variable "image_mutability" {
 # S3 STORAGE VARIABLES
 # ==============================================================================
 
-variable "itsy_web_bucket" {
+variable "web_bucket" {
   description = "Name of the S3 bucket for web assets"
   type        = string
 }
 
-variable "itsy_media_bucket" {
+variable "media_bucket" {
   description = "Name of the S3 bucket for media files"
   type        = string
 }
