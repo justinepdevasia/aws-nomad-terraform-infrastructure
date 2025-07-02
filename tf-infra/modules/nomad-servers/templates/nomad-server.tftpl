@@ -1,0 +1,50 @@
+datacenter = "${nomad_dc}"
+data_dir   = "/opt/nomad/data"
+bind_addr = "0.0.0.0"
+log_level = "INFO"
+
+server {
+  enabled          = true
+  bootstrap_expect = "${nomad_bootstrap_expect}"
+  encrypt          = "${nomad_gossip_encrypt_key}"
+  server_join {
+    retry_join = ["provider=aws region=${aws_region} tag_key=${nomad_join_tag_key} tag_value=${nomad_join_tag_value}"]
+  }
+  search {
+    fuzzy_enabled   = true
+    limit_query     = 200
+    limit_results   = 1000
+    min_term_length = 5
+  }
+}
+
+acl {
+  enabled = true
+}
+
+telemetry {
+  collection_interval = "15s"
+  disable_hostname = true
+  prometheus_metrics = true
+  publish_allocation_metrics = true
+  publish_node_metrics = true
+}
+
+autopilot {
+  cleanup_dead_servers      = true
+  last_contact_threshold    = "200ms"
+  max_trailing_logs         = 200
+  server_stabilization_time = "10s"
+  enable_redundancy_zones   = false
+  disable_upgrade_migration = false
+  enable_custom_upgrades    = false
+}
+
+
+consul {
+  address = "127.0.0.1:8500"
+}
+
+vault {
+  enabled = false
+}

@@ -1,0 +1,65 @@
+image: hashicorp/terraform:latest
+
+definitions:
+  scripts:
+    - script: &setup_aws_credentials
+        |
+          # clone ts-config repo
+          git clone -b main git@bitbucket.org:itsy-dev/ts-config.git
+          config_path=$BITBUCKET_CLONE_DIR/ts-config/"${BITBUCKET_BRANCH}.conf"
+          echo $config_path
+          if [ -f $config_path ]; then
+            source $BITBUCKET_CLONE_DIR/ts-config/${BITBUCKET_BRANCH}.conf
+            echo $REGION
+          else
+            source $BITBUCKET_CLONE_DIR/ts-config/default.conf
+            echo $REGION
+          fi
+          source $BITBUCKET_CLONE_DIR/ts-config/setup/setup_aws_credentials.sh
+    - script: &terraform_apply
+        | 
+          cd $BITBUCKET_CLONE_DIR/tf-infra
+          terraform init -backend-config="backend_${BITBUCKET_BRANCH}.conf" -backend-config="backend_${BITBUCKET_BRANCH}.conf" -backend-config="profile=$BITBUCKET_BRANCH" -backend-config="region=$REGION"
+          terraform apply -var "aws_profile=${BITBUCKET_BRANCH}" --var-file=${BITBUCKET_BRANCH}.tfvars -auto-approve
+    - script: &terraform_validate
+        |
+          cd $BITBUCKET_CLONE_DIR/tf-infra
+          terraform init -backend-config="backend_${BITBUCKET_BRANCH}.conf" -backend-config="profile=$BITBUCKET_BRANCH" -backend-config="region=$REGION"
+          terraform plan -var "aws_profile=${BITBUCKET_BRANCH}" --var-file=${BITBUCKET_BRANCH}.tfvars
+  steps:
+    - step: &terraform_deploy
+        name: Deploy Infra
+        oidc: true
+        trigger: manual
+        script:
+           - *setup_aws_credentials
+           - *terraform_apply
+    - step: &terraform_format
+          name: Formatting terraform
+          oidc: true
+          script:
+           - *setup_aws_credentials
+           - cd $BITBUCKET_CLONE_DIR/tf-infra
+           - terraform fmt
+    - step: &terraform_plan
+          name: Planning terraform
+          oidc: true
+          script:
+            - *setup_aws_credentials
+            - *terraform_validate
+    - step: &destroy_infra
+          name: Destroying terraform
+          oidc: true
+          script:
+            - *setup_aws_credentials
+            - cd $BITBUCKET_CLONE_DIR/tf-infra/entrypoint
+            - terraform init -backend-config="backend_${BITBUCKET_BRANCH}.conf" -backend-config="profile=$BITBUCKET_BRANCH" -backend-config="region=$REGION"
+            - terraform destroy -var "aws_profile=${BITBUCKET_BRANCH}" --var-file=${BITBUCKET_BRANCH}.tfvars -auto-approve
+pipelines:
+
+  branches:
+    'develop':
+      - step: *terraform_plan
+      - step: 
+          <<: *terraform_deploy
+          trigger: manual

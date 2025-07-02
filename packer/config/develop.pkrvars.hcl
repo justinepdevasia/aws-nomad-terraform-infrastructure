@@ -1,0 +1,7 @@
+aws_region = "us-west-2"
+ami_name = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
+instance_type = "t2.micro"
+nomad_version = "1.6.3"
+consul_version = "1.17.0"
+vault_version = "1.15.3"
+consul_template_version = "0.35.0"

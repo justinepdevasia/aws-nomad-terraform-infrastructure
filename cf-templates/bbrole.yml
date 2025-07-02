@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: To Create IAM Role for master - Bitbucket CI Deployment
+Parameters:
+  # create parameter for oidc develop role
+  pBBOIDCRoleName:
+    Type: String
+    Default: bb-oidc-role
+    Description: Name of the Bitbucket OIDC role
+Resources:
+  BBCIRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName:
+        !Join [
+          "-",
+          [ "bb",
+            "deployment",
+            "develop",
+            "role",
+          ],
+        ]
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "sts:AssumeRole"
+            Principal:
+              AWS:
+                - !Join [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      !Ref "AWS::AccountId",
+                      ":role/",
+                      !Ref "pBBOIDCRoleName",
+                    ],
+                  ]
+  # create administrator full access policy for copilot
+  BBCIAdminPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:
+        !Join [
+          "-",
+          [
+            "develop",
+            "admin",
+            "policy",
+          ],
+        ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "*"
+            Resource:
+              - "*"
+      Roles:
+        - !Ref BBCIRole
