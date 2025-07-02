@@ -1,0 +1,184 @@
+# ==============================================================================
+# PRODUCTION CONFIGURATION EXAMPLE
+# ==============================================================================
+# This file shows how to configure the infrastructure for production with
+# proper security settings. Copy this to main.tfvars and customize for your needs.
+
+# ==============================================================================
+# BASIC CONFIGURATION
+# ==============================================================================
+
+region                  = "us-west-2"
+environment             = "prod"
+aws_profile             = "production"
+
+# ==============================================================================
+# SECURITY CONFIGURATION - PRODUCTION
+# ==============================================================================
+
+# PRODUCTION: Only allow specific CIDR blocks - NO public access
+allowed_cidr_blocks = [
+  "10.0.0.0/8",     # Your VPC
+  "172.16.0.0/12",  # Your corporate network
+  # "203.0.113.0/24", # Your office IP range
+  # "198.51.100.0/24", # Your VPN IP range
+]
+
+# Admin access - restrict to specific IP ranges for management
+admin_cidr_blocks = [
+  # "203.0.113.100/32",  # DevOps workstation
+  # "198.51.100.0/28",   # Management subnet
+]
+
+# PRODUCTION: Never enable public access
+enable_public_access = false
+
+# PRODUCTION: Use AWS Secrets Manager or provide via environment variables
+# Do NOT commit these values to git
+nomad_gossip_encrypt_key  = ""  # Auto-generated
+nomad_acl_bootstrap_token = ""  # Auto-generated
+consul_gossip_encrypt_key = ""  # Auto-generated
+
+# ==============================================================================
+# NETWORK CONFIGURATION
+# ==============================================================================
+
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["us-west-2a", "us-west-2b", "us-west-2c"]
+public_subnets     = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+private_subnets    = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+database_subnets   = ["10.0.21.0/24", "10.0.22.0/24", "10.0.23.0/24"]
+
+# ==============================================================================
+# SSL CERTIFICATES - PRODUCTION
+# ==============================================================================
+
+# Use production SSL certificates
+alb_certificate_arn = "arn:aws:acm:us-west-2:ACCOUNT:certificate/CERT-ID"
+
+alb_domain_certificate_arns = [
+  "arn:aws:acm:us-west-2:ACCOUNT:certificate/CERT-ID-1",
+  "arn:aws:acm:us-west-2:ACCOUNT:certificate/CERT-ID-2"
+]
+
+# ==============================================================================
+# HOSTNAMES - PRODUCTION
+# ==============================================================================
+
+client_host_adress_list = ["api.yourdomain.com", "app.yourdomain.com"]
+nomad_host_name         = "nomad.yourdomain.com"
+consul_host_name        = "consul.yourdomain.com"
+
+# ==============================================================================
+# COMPUTE RESOURCES - PRODUCTION
+# ==============================================================================
+
+# Use your production-ready AMI
+ami = "ami-XXXXXXXXXXXXXXXXX"
+
+# SSH key for emergency access
+key_name = "production-ssh-key"
+
+# ==============================================================================
+# ECR CONFIGURATION - PRODUCTION
+# ==============================================================================
+
+ecr_address      = "ACCOUNT.dkr.ecr.us-west-2.amazonaws.com"
+image_mutability = "IMMUTABLE"  # Production should use immutable tags
+
+ecr_name = [
+  "company/app-backend",
+  "company/app-authentication",
+  "company/app-engine",
+]
+
+# ==============================================================================
+# CLUSTER SIZING - PRODUCTION
+# ==============================================================================
+
+# Consul Servers - High Availability
+consul_server_min_size         = 3
+consul_server_max_size         = 5
+consul_server_desired_capacity = 3
+consul_server_instance_type    = "t3.medium"
+
+# Nomad Servers - High Availability
+nomad_server_min_size         = 3
+nomad_server_max_size         = 5
+nomad_server_desired_capacity = 3
+nomad_server_instance_type    = "t3.medium"
+
+# Nomad Clients - APM
+nomad_client_apm_min_size         = 2
+nomad_client_apm_max_size         = 5
+nomad_client_apm_desired_capacity = 2
+nomad_client_apm_instance_type    = "t3a.large"
+
+# Nomad Clients - Django (Scalable)
+nomad_client_django_min_size         = 3
+nomad_client_django_max_size         = 20
+nomad_client_django_desired_capacity = 5
+nomad_client_django_instance_type    = "t3a.large"
+
+# Nomad Clients - Elixir (Scalable)
+nomad_client_elixir_min_size         = 2
+nomad_client_elixir_max_size         = 15
+nomad_client_elixir_desired_capacity = 3
+nomad_client_elixir_instance_type    = "t3a.medium"
+
+# Nomad Clients - Traefik (Load Balancing)
+nomad_client_traefik_min_size         = 2
+nomad_client_traefik_max_size         = 5
+nomad_client_traefik_desired_capacity = 2
+nomad_client_traefik_instance_type    = "t3a.medium"
+
+# Nomad Clients - RabbitMQ (Message Queue)
+nomad_client_rabbit_min_size         = 3
+nomad_client_rabbit_max_size         = 5
+nomad_client_rabbit_desired_capacity = 3
+nomad_client_rabbit_instance_type    = "t3a.medium"
+
+# Nomad Clients - Celery (Background Jobs)
+nomad_client_celery_min_size         = 2
+nomad_client_celery_max_size         = 10
+nomad_client_celery_desired_capacity = 3
+nomad_client_celery_instance_type    = "t3a.large"
+
+# Nomad Clients - Datastore (Database)
+nomad_client_datastore_min_size         = 3
+nomad_client_datastore_max_size         = 5
+nomad_client_datastore_desired_capacity = 3
+nomad_client_datastore_instance_type    = "t3a.medium"
+
+# ==============================================================================
+# STORAGE CONFIGURATION - PRODUCTION
+# ==============================================================================
+
+itsy_media_bucket = "company-media-bucket-prod"
+itsy_web_bucket   = "company-web-bucket-prod"
+
+django_static_public_prefix = "static/backend/public"
+elixir_static_public_prefix = "static/engine/public"
+django_media_public_prefix  = "media/backend/public"
+elixir_media_public_prefix  = "media/engine/public"
+
+# ==============================================================================
+# DNS CONFIGURATION
+# ==============================================================================
+
+route_53_resolver_address = "10.0.0.2"
+
+# ==============================================================================
+# TAGS - PRODUCTION
+# ==============================================================================
+
+tags = {
+  Terraform    = "true"
+  Environment  = "production"
+  Project      = "company-nomad-infrastructure"
+  Owner        = "devops-team"
+  CostCenter   = "engineering"
+  Backup       = "required"
+  Monitoring   = "critical"
+  Compliance   = "required"
+}
