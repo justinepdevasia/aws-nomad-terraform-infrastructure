@@ -78,7 +78,7 @@ terraform apply -var-file="develop.tfvars"
 │   ├── providers.tf         # Provider configuration
 │   ├── backend.tf           # Remote state configuration
 │   ├── develop.tfvars       # Development environment
-│   └── main.tfvars          # Production environment
+│   └── main.tfvars.example  # Production environment example
 ├── packer/                   # AMI building
 │   ├── ami.pkr.hcl          # Packer template
 │   ├── scripts/             # Provisioning scripts
