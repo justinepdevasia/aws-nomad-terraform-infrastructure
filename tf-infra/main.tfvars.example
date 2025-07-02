@@ -154,8 +154,8 @@ nomad_client_datastore_instance_type    = "t3a.medium"
 # STORAGE CONFIGURATION - PRODUCTION
 # ==============================================================================
 
-itsy_media_bucket = "company-media-bucket-prod"
-itsy_web_bucket   = "company-web-bucket-prod"
+media_bucket = "company-media-bucket-prod"
+web_bucket   = "company-web-bucket-prod"
 
 django_static_public_prefix = "static/backend/public"
 elixir_static_public_prefix = "static/engine/public"
