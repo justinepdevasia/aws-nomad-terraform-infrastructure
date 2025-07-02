@@ -57,9 +57,9 @@ alb_domain_certificate_arns = [
 # HOSTNAMES
 # ==============================================================================
 
-client_host_adress_list = ["stage.api.itsy.dev", "stage.itsy.dev"]
-nomad_host_name         = "nomad.develop.itsy.dev"
-consul_host_name        = "consul.develop.itsy.dev"
+client_host_adress_list = ["stage.api.example.com", "stage.example.com"]
+nomad_host_name         = "nomad.develop.example.com"
+consul_host_name        = "consul.develop.example.com"
 
 # ==============================================================================
 # COMPUTE RESOURCES
@@ -79,9 +79,9 @@ ecr_address      = "786731984788.dkr.ecr.us-west-2.amazonaws.com"
 image_mutability = "MUTABLE"
 
 ecr_name = [
-  "itsy/ts-backend",
-  "itsy/ts-authentication",
-  "itsy/ts-engine",
+  "company/backend",
+  "company/authentication",
+  "company/engine",
 ]
 
 # ==============================================================================
@@ -146,13 +146,13 @@ nomad_client_datastore_instance_type    = "t3.micro"
 # STORAGE CONFIGURATION
 # ==============================================================================
 
-itsy_media_bucket = "itsy-media-bucket-dev"
-itsy_web_bucket   = "itsy-web-bucket-dev"
+media_bucket = "app-media-bucket-dev"
+web_bucket   = "app-web-bucket-dev"
 
-django_static_public_prefix = "static/ts-backend/public"
-elixir_static_public_prefix = "static/ts-engine/public"
-django_media_public_prefix  = "media/ts-backend/public"
-elixir_media_public_prefix  = "media/ts-engine/public"
+django_static_public_prefix = "static/backend/public"
+elixir_static_public_prefix = "static/engine/public"
+django_media_public_prefix  = "media/backend/public"
+elixir_media_public_prefix  = "media/engine/public"
 
 # ==============================================================================
 # DNS CONFIGURATION
@@ -167,7 +167,7 @@ route_53_resolver_address = "10.0.0.2"
 tags = {
   Terraform   = "true"
   Environment = "development"
-  Project     = "itsy-nomad-infrastructure"
+  Project     = "nomad-infrastructure"
   Owner       = "devops-team"
   CostCenter  = "engineering"
 }
