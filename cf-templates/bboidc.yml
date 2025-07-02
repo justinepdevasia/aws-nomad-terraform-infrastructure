@@ -1,0 +1,95 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  This template creates a Bitbucket Cloud OIDC Provider Identity in AWS Account
+Parameters:
+  pWorkspaceName:
+    Type: String
+    Description: Bitbucket Workspace name
+    Default: "enter your wokspace name here"
+  pAudience:
+    Type: String
+    Description: >-
+      The audience is the Client ID issued by the identity provider
+    Default: "clientid or audience"
+  pThumbprint:
+    Type: String
+    Description: >-
+      Thumbprint is used to verify that the Provider URL is accurate, generated with openssl.
+  pBBCIRoleArns:
+    Type: CommaDelimitedList
+    Description: >-
+      Arn of the roles to assume to access the AWS Account
+  pRepositoryIds:
+    Type: CommaDelimitedList
+    Description: >-
+      Comma delimited list of repository ids to be associated with the identity
+      provider.
+    Default: '{repo1uuid}:*,{repo2uuid}:*,{repo2uuid}:*,{repo3uuid}:*'
+
+Resources:
+  rBBOIDCProvider:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      ClientIdList:
+        - !Ref pAudience
+      ThumbprintList:
+        - !Ref pThumbprint
+      Url: !Sub https://api.bitbucket.org/2.0/workspaces/${pWorkspaceName}/pipelines-config/identity/oidc
+      Tags:
+        - Key: Name
+          Value: "BitbucketOIDCProvider"
+        - Key: Region
+          Value: !Ref "AWS::Region"
+  rBBOIDCProviderIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: bb-oidc-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "sts:AssumeRoleWithWebIdentity"
+            Principal:
+              "Federated":
+                - !Join [
+                    "",
+                    [
+                      "arn:aws:iam::",
+                      !Ref "AWS::AccountId",
+                      ":oidc-provider/api.bitbucket.org/2.0/workspaces/",
+                      !Ref "pWorkspaceName",
+                      "/pipelines-config/identity/oidc",
+                    ],
+                  ]
+            Condition:
+              "ForAnyValue:StringLike":
+                "api.bitbucket.org/2.0/workspaces/itsy-dev/pipelines-config/identity/oidc:sub":
+                  !Ref pRepositoryIds
+      Path: /
+      Policies:
+        - PolicyName: "itsy-deploy-policy-bb-oidc"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "iam:GetRole"
+                  - "iam:PassRole"
+                Resource: !Ref pBBCIRoleArns
+              - Effect: Allow
+                Action:
+                  - "sts:AssumeRole"
+                Resource: !Ref pBBCIRoleArns
+      Tags:
+        - Key: Name
+          Value: "BitbucketOIDCProviderRole"
+        - Key: Region
+          Value: !Ref "AWS::Region"
+Outputs:
+  BBOIDCProviderIAMRoleArn:
+    Description: Web Identity Assume Role Arn
+    Value: !GetAtt rBBOIDCProviderIAMRole.Arn
+  BBOIDCProviderArn:
+    Description: Bitbucket Cloud OIDC Provider Identity Arn
+    Value: !GetAtt rBBOIDCProvider.Arn

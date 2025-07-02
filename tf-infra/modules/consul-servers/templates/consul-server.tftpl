@@ -1,0 +1,17 @@
+data_dir = "/opt/consul/data"
+bind_addr = "0.0.0.0"
+client_addr = "0.0.0.0"
+advertise_addr = "{{ GetInterfaceIP \"ens5\" }}"
+
+bootstrap_expect = ${consul_bootstrap_expect}
+
+log_level = "INFO"
+
+server = true
+ui = true
+retry_join = ["provider=aws region=${aws_region} tag_key=${consul_join_tag_key} tag_value=${consul_join_tag_value}"]
+
+
+service {
+    name = "consul"
+}
