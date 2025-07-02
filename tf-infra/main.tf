@@ -409,11 +409,11 @@ module "nomad_clients_datastore" {
 # STORAGE INFRASTRUCTURE
 # ==============================================================================
 
-module "itsy_storage" {
-  source = "./modules/itsy_storage"
+module "app_storage" {
+  source = "./modules/app_storage"
 
-  itsy_web_bucket   = var.itsy_web_bucket
-  itsy_media_bucket = var.itsy_media_bucket
+  web_bucket   = var.web_bucket
+  media_bucket = var.media_bucket
 
   region = var.region
 
@@ -429,7 +429,7 @@ module "itsy_storage" {
 # DATABASE INFRASTRUCTURE
 # ==============================================================================
 
-module "itsy_postgres" {
+module "app_postgres" {
   source = "./modules/postgres"
 
   db_subnet_group_name       = module.vpc.database_subnet_group
