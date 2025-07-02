@@ -156,22 +156,22 @@ output "ecr_registry_id" {
 
 output "web_bucket_name" {
   description = "Name of the S3 bucket for web assets"
-  value       = var.itsy_web_bucket
+  value       = var.web_bucket
 }
 
 output "media_bucket_name" {
   description = "Name of the S3 bucket for media files"
-  value       = var.itsy_media_bucket
+  value       = var.media_bucket
 }
 
 output "cloudfront_distribution_id" {
   description = "CloudFront distribution ID"
-  value       = try(module.itsy_storage.cloudfront_distribution_id, null)
+  value       = try(module.app_storage.cloudfront_distribution_id, null)
 }
 
 output "cloudfront_domain_name" {
   description = "CloudFront distribution domain name"
-  value       = try(module.itsy_storage.cloudfront_domain_name, null)
+  value       = try(module.app_storage.cloudfront_domain_name, null)
 }
 
 # ==============================================================================
@@ -180,13 +180,13 @@ output "cloudfront_domain_name" {
 
 output "postgres_endpoint" {
   description = "PostgreSQL database endpoint"
-  value       = try(module.itsy_postgres.endpoint, null)
+  value       = try(module.app_postgres.endpoint, null)
   sensitive   = true
 }
 
 output "postgres_port" {
   description = "PostgreSQL database port"
-  value       = try(module.itsy_postgres.port, null)
+  value       = try(module.app_postgres.port, null)
 }
 
 # ==============================================================================
