@@ -166,12 +166,12 @@ output "media_bucket_name" {
 
 output "cloudfront_distribution_id" {
   description = "CloudFront distribution ID"
-  value       = try(module.app_storage.cloudfront_distribution_id, null)
+  value       = try(module.storage.cloudfront_distribution_id, null)
 }
 
 output "cloudfront_domain_name" {
   description = "CloudFront distribution domain name"
-  value       = try(module.app_storage.cloudfront_domain_name, null)
+  value       = try(module.storage.cloudfront_domain_name, null)
 }
 
 # ==============================================================================
@@ -180,13 +180,13 @@ output "cloudfront_domain_name" {
 
 output "postgres_endpoint" {
   description = "PostgreSQL database endpoint"
-  value       = try(module.app_postgres.endpoint, null)
+  value       = try(module.database.endpoint, null)
   sensitive   = true
 }
 
 output "postgres_port" {
   description = "PostgreSQL database port"
-  value       = try(module.app_postgres.port, null)
+  value       = try(module.database.port, null)
 }
 
 # ==============================================================================
