@@ -409,13 +409,11 @@ module "nomad_clients_datastore" {
 # STORAGE INFRASTRUCTURE
 # ==============================================================================
 
-# NOTE: Module name kept as "itsy_storage" to match existing directory
-# Consider renaming the module directory to "storage" for better consistency
 module "storage" {
-  source = "./modules/itsy_storage"
+  source = "./modules/app_storage"
 
-  itsy_web_bucket   = var.web_bucket
-  itsy_media_bucket = var.media_bucket
+  app_web_bucket   = var.web_bucket
+  app_media_bucket = var.media_bucket
 
   region = var.region
 
