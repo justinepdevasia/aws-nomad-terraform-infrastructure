@@ -64,11 +64,11 @@ Resources:
                   ]
             Condition:
               "ForAnyValue:StringLike":
-                "api.bitbucket.org/2.0/workspaces/itsy-dev/pipelines-config/identity/oidc:sub":
+                "api.bitbucket.org/2.0/workspaces/app-dev/pipelines-config/identity/oidc:sub":
                   !Ref pRepositoryIds
       Path: /
       Policies:
-        - PolicyName: "itsy-deploy-policy-bb-oidc"
+        - PolicyName: "app-deploy-policy-bb-oidc"
           PolicyDocument:
             Version: "2012-10-17"
             Statement:
