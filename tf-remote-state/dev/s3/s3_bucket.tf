@@ -6,8 +6,8 @@ provider "aws" {
   region = "us-west-2"
 }
 
-resource "aws_s3_bucket" "terraform-state-itsy-development-us-west-2" {
-  bucket = "terraform-state-itsy-development-us-west-2"
+resource "aws_s3_bucket" "terraform-state-app-development-us-west-2" {
+  bucket = "terraform-state-app-development-us-west-2"
 
   lifecycle {
     prevent_destroy = true

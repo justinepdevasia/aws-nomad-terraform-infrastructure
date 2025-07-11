@@ -5,7 +5,7 @@ definitions:
     - script: &setup_aws_credentials
         |
           # clone ts-config repo
-          git clone -b main git@bitbucket.org:itsy-dev/ts-config.git
+          git clone -b main git@bitbucket.org:app-dev/ts-config.git
           config_path=$BITBUCKET_CLONE_DIR/ts-config/"${BITBUCKET_BRANCH}.conf"
           echo $config_path
           if [ -f $config_path ]; then
