@@ -1,16 +1,16 @@
 region                  = "us-west-2"
 environment             = "prod"
 alb_certificate_arn     = "arn:aws:acm:us-west-2:928468735972:certificate/1bee4134-c0e6-49cf-a29f-d755843a3b86"
-client_host_adress_list = ["api.itsy.dev", "itsy.dev"]
-nomad_host_name         = "nomad.itsy.dev"
-consul_host_name        = "consul.itsy.dev"
+client_host_adress_list = ["api.app.dev", "app.dev"]
+nomad_host_name         = "nomad.app.dev"
+consul_host_name        = "consul.app.dev"
 ami                     = "ami-02391ff921f0d68a2"
 ecr_address             = "928468735972.dkr.ecr.us-west-2.amazonaws.com"
 image_mutability        = "MUTABLE"
 ecr_name = [
-  "itsy/ts-backend",
-  "itsy/ts-authentication",
-  "itsy/ts-engine",
+  "app/ts-backend",
+  "app/ts-authentication",
+  "app/ts-engine",
 ]
 alb_domain_certificate_arns = [
   "arn:aws:acm:us-west-2:928468735972:certificate/04ae9c77-4f45-41b8-ac24-ffa90571922d",
@@ -54,8 +54,8 @@ nomad_client_datastore_min_size         = "1"
 nomad_client_datastore_max_size         = "1"
 nomad_client_datastore_desired_capacity = "1"
 
-itsy_media_bucket = "itsy-media-bucket-prod"
-itsy_web_bucket   = "itsy-web-bucket-prod"
+media_bucket = "app-media-bucket-prod"
+web_bucket   = "app-web-bucket-prod"
 
 django_static_public_prefix = "static/ts-backend/public"
 elixir_static_public_prefix = "static/ts-engine/public"
