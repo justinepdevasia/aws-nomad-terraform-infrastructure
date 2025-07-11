@@ -13,8 +13,8 @@ ecr_name = [
   "app/ts-engine",
 ]
 alb_domain_certificate_arns = [
-  "arn:aws:acm:us-west-2:123456789012:certificate/87654321-4321-4321-4321-210987654321",
-  "arn:aws:acm:us-west-2:123456789012:certificate/abcdef12-3456-7890-abcd-ef1234567890"
+  "arn:aws:acm:us-west-2:123456789012:certificate/12345678-1234-1234-1234-123456789012",
+  "arn:aws:acm:us-west-2:123456789012:certificate/87654321-4321-4321-4321-210987654321"
 ]
 
 
